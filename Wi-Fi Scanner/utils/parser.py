@@ -9,7 +9,10 @@ def parse_networks(output):
             if current:
                 networks.append(current)
                 current = {}
-            ssid = re.sub(r"^SSID \d+ : ", "", line)
+            # Netsh may output varying spaces around the colon. Split once on
+            # the first colon to reliably extract the SSID name regardless of
+            # formatting.
+            ssid = line.split(":", 1)[1].strip()
             current["SSID"] = ssid
         elif "Signal" in line:
             signal = int(re.sub(r"[^\d]", "", line.split(":")[1]))
