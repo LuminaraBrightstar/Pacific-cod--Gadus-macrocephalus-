@@ -5,7 +5,9 @@ def parse_networks(output):
     current = {}
     for line in output.splitlines():
         line = line.strip()
-        if line.startswith("SSID"):
+        # Match SSID lines like "SSID 1: Name" or "SSID 1 : Name".
+        # Netsh output varies spacing around the colon, so allow optional spaces.
+        if re.match(r'^SSID\s+\d+\s*:\s*', line):
             if current:
                 networks.append(current)
                 current = {}
