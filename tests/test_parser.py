@@ -1,7 +1,7 @@
 import os
 import sys
 
-# Add the Wi-Fi Scanner directory to the path for imports
+# Allow importing from the Wi-Fi Scanner directory
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'Wi-Fi Scanner'))
 
 from utils.parser import parse_networks
@@ -26,9 +26,14 @@ SSID 2 : AnotherOne
 
 SAMPLE_OUTPUT_VARIATION = """
 SSID 1:NoSpaces
-Authentication:WPA3
+Authentication :WPA3
 Signal:70%
+
+SSID 2    :  WithSpaces
+Authentication:   WPA2
+Signal             :50%
 """
+
 
 def test_parse_standard_output():
     networks = parse_networks(SAMPLE_OUTPUT)
@@ -37,9 +42,10 @@ def test_parse_standard_output():
         {"SSID": "AnotherOne", "Signal": 60, "Authentication": "Open"},
     ]
 
+
 def test_parse_colon_variation():
     networks = parse_networks(SAMPLE_OUTPUT_VARIATION)
     assert networks == [
-        {"SSID": "NoSpaces", "Signal": 70, "Authentication": "WPA3"}
+        {"SSID": "NoSpaces", "Signal": 70, "Authentication": "WPA3"},
+        {"SSID": "WithSpaces", "Signal": 50, "Authentication": "WPA2"},
     ]
-
